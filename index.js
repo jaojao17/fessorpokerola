@@ -1,22 +1,41 @@
-
+import express from 'express';
 import fetch from 'node-fetch';
 
+const app = express();
+const PORT = 3000;
 
-async function getPokemon(pokemonName) {
-    try { 
-        const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonName.toLowerCase()}`);     
+app.use(express.json());
+
+
+app.get('/pokemon/:name', async (req, res) => {
+    const pokemonName = req.params.name;
+    try {
+        const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonName.toLowerCase()}`);
         if (!response.ok) {
-            throw new Error(`Erro: ${response.status}`);
+            return res.status(response.status).send(`Erro: ${response.status}`);
         }
         const data = await response.json();
-
-        console.log(`Nome: ${data.name}`);
-        console.log(`Altura: ${data.height}`);
-        console.log(`Peso: ${data.weight}`);
-        console.log(`Tipos: ${data.types.map(type => type.type.name).join(', ')}`);
+        res.json(data);
     } catch (error) {
-        console.error(error.message);
+        res.status(500).send(error.message);
     }
-}
-getPokemon('Charmeleon');
+});
 
+
+app.post('/pokemon', (req, res) => {
+    res.send('Este método ainda não está implementado');
+});
+
+
+app.put('/pokemon/:id', (req, res) => {
+    res.send('Este método ainda não está implementado');
+});
+
+app.delete('/pokemon/:id', (req, res) => {
+    res.send('Este método ainda não está implementado');
+});
+
+
+app.listen(PORT, () => {
+    console.log(`Servidor rodando na porta ${PORT}`);
+});
