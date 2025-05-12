@@ -7,20 +7,20 @@ const PORT = 3000;
 app.use(express.json());
 
 
-app.get('/pokemon/:name', async (req, res) => {
-    const pokemonName = req.params.name;
+app.get('/pokemon/type/:type', async (req, res) => {
+    const type = req.params.type.toLowerCase();
     try {
-        const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonName.toLowerCase()}`);
+        const response = await fetch(`https://pokeapi.co/api/v2/type/${type}`);
         if (!response.ok) {
             return res.status(response.status).send(`Erro: ${response.status}`);
         }
         const data = await response.json();
-        res.json(data);
+        const pokemons = data.pokemon.map(p => p.pokemon);
+        res.json(pokemons);
     } catch (error) {
         res.status(500).send(error.message);
     }
 });
-
 
 app.post('/pokemon', (req, res) => {
     res.send('Este método ainda não está implementado');
